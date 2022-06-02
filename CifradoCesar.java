@@ -1,65 +1,52 @@
-package cifradocesar;
+Scanner sc = new Scanner(System.in);
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Scanner;
+char alfabeto[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+char cifrado[] = {'d', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a', 'b', 'c'};
 
-public class CifradoCesar 
+System.out.println("Introduce el nombre del fichero: \n");
+String nombre = sc.nextLine();
+
+File fichero1 = new File(nombre);
+File fichero2 = new File("secreto_" + fichero1.getName());
+
+FileOutputStream fos = null;
+FileInputStream fis = null;
+
+try
 {
-	public static void main(String[] args) 
-	{
-		Scanner sc = new Scanner(System.in);
-		
-		char alfabeto[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-		char cifrado[] = {'d', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a', 'b', 'c'};
-		
-		System.out.println("Introduce el nombre del fichero: \n");
-		String nombre = sc.nextLine();
+	fichero2.createNewFile();
 
-		File fichero1 = new File(nombre);
-		File fichero2 = new File("secreto_" + fichero1.getName());
-		
-		FileOutputStream fos = null;
-		FileInputStream fis = null;
-		
-		try
+	fis = new FileInputStream(fichero1);
+	fos = new FileOutputStream(fichero2);
+
+	int l = 0;
+
+	while((l = fis.read()) != -1)
+	{
+		char letra = (char)l;
+
+		if(Character.isAlphabetic(letra))
 		{
-			fichero2.createNewFile();
-			
-			fis = new FileInputStream(fichero1);
-			fos = new FileOutputStream(fichero2);
-			
-			int l = 0;
-			
-			while((l = fis.read()) != -1)
+			for(int i = 0; i < alfabeto.length; i++)
 			{
-				char letra = (char)l;
-				
-				if(Character.isAlphabetic(letra))
+				if(alfabeto[i] == letra)
 				{
-					for(int i = 0; i < alfabeto.length; i++)
-					{
-						if(alfabeto[i] == letra)
-						{
-							fos.write(cifrado[i]);
-						}
-					}
-				}
-				else
-				{
-					fos.write(letra);
+					fos.write(cifrado[i]);
 				}
 			}
-			
-			fis.close();
-			fos.close();
-		} catch(IOException e)
-		{
-			System.err.println(e.getMessage());
 		}
-		
-		System.out.println("Fin");
+		else
+		{
+			fos.write(letra);
+		}
 	}
+
+	fis.close();
+	fos.close();
+} catch(IOException e)
+{
+	System.err.println(e.getMessage());
+}
+
+System.out.println("Fin");
 }
